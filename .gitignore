@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.env.local
+__pycache__/
+*.pyc
+.env
+*.db
+/tmp/
+.pytest_cache/
+.coverage
+dist/
+.DS_Store
+*.db-shm
+*.db-wal

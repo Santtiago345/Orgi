@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: orgi-backend
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: pip install pytest pytest-cov
+      - run: pytest tests/ -v --cov=app --cov-report=term --cov-fail-under=70
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: orgi-frontend
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci || npm install
+      - run: npx vitest run --reporter=verbose
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint Backend
+        working-directory: orgi-backend
+        run: |
+          pip install ruff
+          ruff check app/
+      - name: Lint Frontend
+        working-directory: orgi-frontend
+        run: |
+          npm ci || true
+          npx next lint --no-cache || true

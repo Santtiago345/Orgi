@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1A56DB;
+  --success: #0EA472;
+  --danger: #E02424;
+  --warning: #FF8800;
+}
+
+body {
+  color: #111928;
+  background: #F9FAFB;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
