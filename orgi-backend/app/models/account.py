@@ -14,7 +14,7 @@ class Account(Base):
     balance = Column(Numeric(15, 2), default=0)
     currency = Column(String(3), default="COP")
     referencia = Column(String(100), unique=True, nullable=True)
-    color = Column(String(7), default="#1A56DB")
+    color = Column(String(9), default="#1A56DB")
     icon = Column(String(50))
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

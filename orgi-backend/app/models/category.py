@@ -10,7 +10,7 @@ class Category(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String(255), nullable=False)
     type = Column(String(10), nullable=False)
-    color = Column(String(7), default="#6B7280")
+    color = Column(String(9), default="#6B7280")
     icon = Column(String(50))
     parent_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
     is_system = Column(Boolean, default=False)

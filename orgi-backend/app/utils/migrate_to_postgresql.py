@@ -6,6 +6,7 @@ Usage:
 """
 import argparse
 import sys
+import re
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -16,6 +17,20 @@ from app.models import (
     User, Account, Category, Transaction, Debt, DebtPayment,
     CreditCard, CreditCardTransaction, PDFImport, Budget
 )
+
+COLOR_MODELS = {Account, Category}
+
+def android_color_to_hex(color_str):
+    if not color_str or color_str.startswith("#"):
+        return color_str
+    try:
+        color_int = int(color_str)
+        if color_int < 0:
+            color_int = color_int & 0xFFFFFFFF
+        rgb = color_int & 0x00FFFFFF
+        return f"#{rgb:06X}"
+    except (ValueError, TypeError):
+        return str(color_str)[:7]
 
 ALL_MODELS = [
     User, Account, Category, Transaction, Debt, DebtPayment,
@@ -63,6 +78,8 @@ def migrate(pg_url: str, sqlite_path: str):
                         v = v.replace(tzinfo=None)
                     elif isinstance(v, date):
                         pass
+                    if model in COLOR_MODELS and k == "color":
+                        v = android_color_to_hex(v)
                     cleaned[k] = v
                 pg_session.execute(model.__table__.insert().values(**cleaned))
             pg_session.commit()
