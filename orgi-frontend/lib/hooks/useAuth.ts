@@ -10,14 +10,14 @@ export function useAuth() {
   const handleLogin = async (email: string, password: string) => {
     const data = await apiLogin(email, password);
     login(data.access_token, data.refresh_token, data.user);
-    router.push("/dashboard");
+    router.push("/");
     return data;
   };
 
   const handleRegister = async (email: string, password: string, full_name: string) => {
     const data = await apiRegister(email, password, full_name);
     login(data.access_token, data.refresh_token, data.user);
-    router.push("/dashboard");
+    router.push("/");
     return data;
   };
 
