@@ -56,7 +56,7 @@ def migrate(pg_url: str, sqlite_path: str):
         print(f"  {table}: {len(rows)} rows")
 
     print(f"\nConnecting to PostgreSQL...")
-    pg_engine = create_engine(pg_url)
+    pg_engine = create_engine(pg_url, connect_args={"sslmode": "require"}, pool_pre_ping=True)
     Base.metadata.drop_all(bind=pg_engine)
     Base.metadata.create_all(bind=pg_engine)
     pg_session = Session(pg_engine)
