@@ -44,10 +44,10 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-fade-in-down">
         <div>
-          <h2 className="text-xl font-bold text-neutral-900">Dashboard</h2>
-          <p className="text-sm text-neutral-400 mt-0.5">Resumen de tu situación financiera</p>
+          <h2 className="page-title">Dashboard</h2>
+          <p className="page-subtitle">Resumen de tu situacion financiera</p>
         </div>
-        <div className="text-xs text-neutral-400 font-mono bg-white border border-neutral-100 rounded-xl px-3 py-1.5 shadow-soft">
+        <div className="text-xs text-neutral-400 font-mono bg-white/70 border border-white/40 rounded-xl px-3 py-1.5 shadow-soft backdrop-blur-sm">
           {formatDate(new Date().toISOString())}
         </div>
       </div>
@@ -81,10 +81,10 @@ export default function DashboardPage() {
           <div className="card p-12 col-span-2 animate-fade-in">
             <div className="text-center text-neutral-400">
               <div className="empty-state-icon mx-auto mb-4">
-                <TrendingUp size={24} className="text-neutral-300" />
+                <TrendingUp size={24} className="text-primary/40" />
               </div>
               <p className="font-semibold text-neutral-600">No hay datos suficientes</p>
-              <p className="text-sm text-neutral-400 mt-1">Crea algunas transacciones para ver gráficas.</p>
+              <p className="text-sm text-neutral-400 mt-1">Crea algunas transacciones para ver graficas.</p>
             </div>
           </div>
         )}
@@ -96,23 +96,23 @@ export default function DashboardPage() {
         </div>
         <div className="animate-fade-in-up" style={{ animationDelay: "400ms" }}>
           <div className="card p-6">
-            <h3 className="font-semibold text-neutral-900 mb-4">Resumen Rápido</h3>
+            <h3 className="font-semibold text-neutral-900 mb-4">Resumen Rapido</h3>
             <div className="space-y-3">
-              <div className="flex justify-between items-center py-3 px-4 bg-success/5 rounded-xl border border-success/10">
+              <div className="flex justify-between items-center py-3.5 px-4 bg-gradient-to-r from-success/[0.08] to-transparent rounded-xl border border-success/10">
                 <div>
                   <span className="text-sm text-neutral-600">Activos (cuentas)</span>
                   <p className="text-[10px] text-success font-medium mt-0.5">Total en cuentas bancarias</p>
                 </div>
                 <span className="font-mono text-sm font-bold text-success">{formatCOP(netWorth?.activos || "0")}</span>
               </div>
-              <div className="flex justify-between items-center py-3 px-4 bg-danger/5 rounded-xl border border-danger/10">
+              <div className="flex justify-between items-center py-3.5 px-4 bg-gradient-to-r from-danger/[0.08] to-transparent rounded-xl border border-danger/10">
                 <div>
                   <span className="text-sm text-neutral-600">Pasivos (deudas)</span>
                   <p className="text-[10px] text-danger font-medium mt-0.5">Total de obligaciones</p>
                 </div>
                 <span className="font-mono text-sm font-bold text-danger">{formatCOP(netWorth?.pasivos || "0")}</span>
               </div>
-              <div className="flex justify-between items-center py-3 px-4 bg-primary/5 rounded-xl border border-primary/10">
+              <div className="flex justify-between items-center py-3.5 px-4 bg-gradient-to-r from-primary/[0.08] to-transparent rounded-xl border border-primary/10">
                 <div>
                   <span className="text-sm font-medium text-neutral-800">Patrimonio Neto</span>
                   <p className="text-[10px] text-primary font-medium mt-0.5">Activos - Pasivos</p>

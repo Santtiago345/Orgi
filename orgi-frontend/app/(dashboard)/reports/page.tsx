@@ -35,8 +35,8 @@ export default function ReportsPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-xl font-bold text-neutral-900">Reportes</h2>
-        <p className="text-sm text-neutral-400 mt-0.5">Visualiza tus finanzas con graficas detalladas</p>
+        <h2 className="page-title">Reportes</h2>
+        <p className="page-subtitle">Visualiza tus finanzas con graficas detalladas</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -76,7 +76,7 @@ export default function ReportsPage() {
         <div className="card p-12 animate-fade-in">
           <div className="text-center text-neutral-400">
             <div className="empty-state-icon mx-auto mb-4">
-              <BarChart3 size={24} className="text-neutral-300" />
+              <BarChart3 size={24} className="text-primary/40" />
             </div>
             <p className="font-semibold text-neutral-600">No hay datos suficientes</p>
             <p className="text-sm text-neutral-400 mt-1">Crea algunas transacciones para generar reportes.</p>

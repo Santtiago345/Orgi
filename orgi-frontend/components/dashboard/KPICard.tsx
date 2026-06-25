@@ -12,26 +12,36 @@ interface KPICardProps {
   delay?: number;
 }
 
-const colorMap: Record<string, { bg: string; icon: string; gradient: string }> = {
+const colorMap: Record<string, { from: string; to: string; iconBg: string; iconColor: string; textColor: string }> = {
   blue: {
-    bg: "bg-primary-light", icon: "text-primary",
-    gradient: "from-primary/5 via-transparent to-transparent",
+    from: "from-primary/5", to: "to-primary/0",
+    iconBg: "bg-gradient-to-br from-primary to-primary-dark",
+    iconColor: "text-white",
+    textColor: "text-primary",
   },
   green: {
-    bg: "bg-success-light", icon: "text-success",
-    gradient: "from-success/5 via-transparent to-transparent",
+    from: "from-success/5", to: "to-success/0",
+    iconBg: "bg-gradient-to-br from-success to-success-dark",
+    iconColor: "text-white",
+    textColor: "text-success",
   },
   red: {
-    bg: "bg-danger-light", icon: "text-danger",
-    gradient: "from-danger/5 via-transparent to-transparent",
+    from: "from-danger/5", to: "to-danger/0",
+    iconBg: "bg-gradient-to-br from-danger to-danger-dark",
+    iconColor: "text-white",
+    textColor: "text-danger",
   },
   purple: {
-    bg: "bg-accent-light", icon: "text-accent",
-    gradient: "from-accent/5 via-transparent to-transparent",
+    from: "from-accent/5", to: "to-accent/0",
+    iconBg: "bg-gradient-to-br from-accent to-primary-dark",
+    iconColor: "text-white",
+    textColor: "text-accent",
   },
   amber: {
-    bg: "bg-warning-light", icon: "text-warning",
-    gradient: "from-warning/5 via-transparent to-transparent",
+    from: "from-warning/5", to: "to-warning/0",
+    iconBg: "bg-gradient-to-br from-warning to-warning-dark",
+    iconColor: "text-white",
+    textColor: "text-warning-dark",
   },
 };
 
@@ -42,14 +52,15 @@ export default function KPICard({ title, value, icon, trend, trendValue, color =
 
   return (
     <div
-      className="card-hover relative overflow-hidden animate-fade-in-up"
+      className="card-hover relative overflow-hidden animate-fade-in-up group"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className={cn("absolute inset-0 bg-gradient-to-br pointer-events-none", c.gradient)} />
+      <div className={cn("absolute inset-0 bg-gradient-to-br pointer-events-none opacity-60", c.from, c.to)} />
+      <div className="absolute top-0 right-0 w-32 h-32 -translate-y-1/2 translate-x-1/2 rounded-full bg-gradient-to-br from-primary/[0.02] to-transparent pointer-events-none" />
       <div className="relative p-5">
         <div className="flex items-start justify-between mb-4">
-          <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">{title}</p>
-          <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center", c.bg, c.icon)}>
+          <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-[0.08em]">{title}</p>
+          <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-black/5", c.iconBg, c.iconColor)}>
             {icon}
           </div>
         </div>
@@ -57,20 +68,21 @@ export default function KPICard({ title, value, icon, trend, trendValue, color =
           {value}
         </p>
         {trend && trendValue && (
-          <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-neutral-50">
-            {trend === "up" ? (
-              <TrendingUp size={13} className="text-success" />
-            ) : trend === "down" ? (
-              <TrendingDown size={13} className="text-danger" />
-            ) : (
-              <Minus size={13} className="text-neutral-300" />
-            )}
-            <span className={cn("text-xs font-medium",
-              trend === "up" ? "text-success" : trend === "down" ? "text-danger" : "text-neutral-400"
+          <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-neutral-100/60">
+            <div className={cn(
+              "flex items-center gap-1 px-1.5 py-0.5 rounded-md text-xs font-medium",
+              trend === "up" ? "text-success bg-success/5" : trend === "down" ? "text-danger bg-danger/5" : "text-neutral-400 bg-neutral-100/50"
             )}>
+              {trend === "up" ? (
+                <TrendingUp size={12} />
+              ) : trend === "down" ? (
+                <TrendingDown size={12} />
+              ) : (
+                <Minus size={12} />
+              )}
               {trendValue}
-            </span>
-            <span className="text-[11px] text-neutral-400">vs mes ant.</span>
+            </div>
+            <span className="text-[11px] text-neutral-400">vs mes anterior</span>
           </div>
         )}
       </div>

@@ -15,21 +15,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-surface flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-[3px] border-primary/20 border-t-primary rounded-full animate-spin" />
-          <p className="text-sm text-neutral-400 font-medium">Cargando...</p>
+          <div className="w-10 h-10 border-[3px] border-primary/20 border-t-primary rounded-full animate-spin" />
+          <p className="text-sm text-neutral-400 font-medium">Cargando orgi...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen bg-glow">
+      <div className="fixed inset-0 bg-grid pointer-events-none" />
       <Sidebar />
       <div
         className={cn(
-          "flex flex-col min-h-screen transition-all duration-300",
+          "relative flex flex-col min-h-screen transition-all duration-300",
           sidebarPinned ? "lg:pl-64" : "lg:pl-0",
         )}
       >
