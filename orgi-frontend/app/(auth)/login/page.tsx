@@ -33,7 +33,7 @@ export default function LoginPage() {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2.5 bg-danger-light text-danger text-sm p-3.5 rounded-xl mb-6 border border-danger/10">
+        <div className="flex items-center gap-2.5 bg-danger-light text-danger text-sm p-3.5 rounded-xl mb-6 border border-danger/10 animate-fade-in">
           <div className="w-1.5 h-1.5 rounded-full bg-danger shrink-0" />
           <span>{error}</span>
         </div>
@@ -45,12 +45,8 @@ export default function LoginPage() {
           <div className="relative">
             <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field pl-10"
-              placeholder="tu@email.com"
-              required
+              type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+              className="input-field pl-10" placeholder="tu@email.com" required
             />
           </div>
         </div>
@@ -60,15 +56,12 @@ export default function LoginPage() {
           <div className="relative">
             <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" />
             <input
-              type={showPassword ? "text" : "password"}
-              value={password}
+              type={showPassword ? "text" : "password"} value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-field pl-10 pr-10"
-              placeholder="••••••••"
-              required
+              className="input-field pl-10 pr-10" placeholder="••••••••" required
             />
             <button type="button" onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors">
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors p-1">
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
@@ -77,7 +70,9 @@ export default function LoginPage() {
         <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
           {loading ? (
             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : "Iniciar Sesión"}
+          ) : (
+            <><LogIn size={16} /> Iniciar Sesión</>
+          )}
         </button>
       </form>
 

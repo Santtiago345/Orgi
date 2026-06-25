@@ -2,41 +2,33 @@
 import { useQuery } from "@tanstack/react-query";
 import { getDebts, getDebtSummary } from "@/lib/api/debts";
 import { Plus, PercentCircle } from "lucide-react";
+import { formatCOP } from "@/lib/utils";
 
 export default function DebtsPage() {
   const { data: debts } = useQuery({ queryKey: ["debts"], queryFn: () => getDebts() });
   const { data: summary } = useQuery({ queryKey: ["debts-summary"], queryFn: getDebtSummary });
 
-  const formatCOP = (amount: string) => {
-    try {
-      const num = parseFloat(amount);
-      return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(num);
-    } catch { return amount; }
-  };
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-neutral-800">Deudas</h2>
           <p className="text-sm text-neutral-500 mt-0.5">Gestiona tus obligaciones financieras</p>
         </div>
-        <button className="btn-primary">
-          <Plus size={16} /> Nueva Deuda
-        </button>
+        <button className="btn-primary"><Plus size={16} /> Nueva Deuda</button>
       </div>
 
       {summary && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="card-hover border-danger/15 p-5">
+          <div className="card-hover border-danger/15 p-5 animate-fade-in-up" style={{ animationDelay: "0ms" }}>
             <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Total Deuda</p>
             <p className="text-2xl font-bold font-mono text-danger">{formatCOP(summary.total_debt)}</p>
           </div>
-          <div className="card-hover p-5">
+          <div className="card-hover p-5 animate-fade-in-up" style={{ animationDelay: "80ms" }}>
             <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Deudas Activas</p>
             <p className="text-2xl font-bold text-neutral-800">{summary.active_count}</p>
           </div>
-          <div className="card-hover p-5">
+          <div className="card-hover p-5 animate-fade-in-up" style={{ animationDelay: "160ms" }}>
             <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">En Mora</p>
             <p className="text-2xl font-bold text-danger">{summary.overdue_count}</p>
           </div>
@@ -45,8 +37,8 @@ export default function DebtsPage() {
 
       {debts && debts.length > 0 ? (
         <div className="space-y-3">
-          {debts.map((debt) => (
-            <div key={debt.id} className="card-hover p-5">
+          {debts.map((debt, idx) => (
+            <div key={debt.id} className="card-hover p-5 animate-fade-in-up" style={{ animationDelay: `${idx * 60}ms` }}>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-danger-light flex items-center justify-center">
@@ -79,11 +71,9 @@ export default function DebtsPage() {
           ))}
         </div>
       ) : (
-        <div className="card">
+        <div className="card animate-fade-in">
           <div className="empty-state">
-            <div className="empty-state-icon">
-              <PercentCircle size={24} className="text-neutral-400" />
-            </div>
+            <div className="empty-state-icon"><PercentCircle size={24} className="text-neutral-400" /></div>
             <p className="font-semibold text-neutral-700">No hay deudas registradas</p>
             <p className="text-sm text-neutral-500 mt-1">Lleva el control de tus obligaciones financieras.</p>
           </div>

@@ -25,9 +25,9 @@ export default function PDFUploader() {
 
   return (
     <div className="space-y-4">
-      <label className="flex flex-col items-center gap-4 p-10 border-2 border-dashed border-neutral-200 rounded-2xl cursor-pointer hover:border-primary/30 hover:bg-primary/[0.02] transition-all group">
-        <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center group-hover:bg-primary/15 transition-colors">
-          <Upload size={26} className="text-primary" />
+      <label className="flex flex-col items-center gap-4 p-10 border-2 border-dashed border-neutral-200 rounded-2xl cursor-pointer hover:border-primary/30 hover:bg-primary/[0.02] transition-all group active:scale-[0.99]">
+        <div className="w-14 h-14 rounded-2xl bg-primary-light flex items-center justify-center group-hover:bg-primary/15 group-hover:scale-105 transition-all duration-300">
+          <Upload size={26} className="text-primary group-hover:-translate-y-0.5 transition-transform" />
         </div>
         <div className="text-center">
           <p className="font-semibold text-neutral-700">Selecciona un archivo PDF</p>
@@ -45,7 +45,7 @@ export default function PDFUploader() {
       </label>
 
       {file && !upload.isSuccess && (
-        <div className="flex items-center gap-3 p-4 bg-primary-light rounded-xl border border-primary/10">
+        <div className="flex items-center gap-3 p-4 bg-primary-light rounded-xl border border-primary/10 animate-fade-in-up">
           <FileText size={20} className="text-primary shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-neutral-800 truncate">{file.name}</p>
@@ -67,14 +67,14 @@ export default function PDFUploader() {
       )}
 
       {upload.isError && (
-        <div className="flex items-center gap-2.5 bg-danger-light text-danger text-sm p-3.5 rounded-xl border border-danger/10">
+        <div className="flex items-center gap-2.5 bg-danger-light text-danger text-sm p-3.5 rounded-xl border border-danger/10 animate-fade-in">
           <AlertCircle size={16} className="shrink-0" />
           {upload.error instanceof Error ? upload.error.message : "Error al procesar el PDF"}
         </div>
       )}
 
       {upload.isSuccess && (
-        <div className="flex items-center gap-3 p-4 bg-success-light rounded-xl border border-success/20">
+        <div className="flex items-center gap-3 p-4 bg-success-light rounded-xl border border-success/20 animate-scale-in">
           <div className="w-9 h-9 rounded-xl bg-success/10 flex items-center justify-center">
             <CheckCircle size={20} className="text-success" />
           </div>

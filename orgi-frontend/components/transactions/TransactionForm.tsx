@@ -77,8 +77,8 @@ export default function TransactionForm({ transaction, onSuccess, onClose }: Pro
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto border border-neutral-100" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto border border-neutral-100 animate-scale-in" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between p-6 border-b border-neutral-100">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -102,22 +102,22 @@ export default function TransactionForm({ transaction, onSuccess, onClose }: Pro
           </div>
           <input type="hidden" {...register("tipo")} />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-1.5">Fecha</label>
-              <input type="date" {...register("fecha")} className="w-full px-3 py-2.5 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" />
+              <input type="date" {...register("fecha")} className="input-field" />
               {errors.fecha && <p className="text-xs text-danger mt-1">{errors.fecha.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-1.5">Monto ($ COP)</label>
-              <input type="number" step="0.01" min="0" placeholder="0.00" {...register("cantidad")} className="w-full px-3 py-2.5 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow font-mono" />
+              <input type="number" step="0.01" min="0" placeholder="0.00" {...register("cantidad")} className="input-field font-mono" />
               {errors.cantidad && <p className="text-xs text-danger mt-1">{errors.cantidad.message}</p>}
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1.5">Cuenta</label>
-            <select {...register("account_id")} className="w-full px-3 py-2.5 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow">
+            <select {...register("account_id")} className="input-field">
               <option value="">Seleccionar cuenta</option>
               {accounts.map((a) => (
                 <option key={a.id} value={a.id}>{a.name} — {a.bank_name || "Sin banco"}</option>
@@ -128,7 +128,7 @@ export default function TransactionForm({ transaction, onSuccess, onClose }: Pro
 
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1.5">Categoría</label>
-            <select {...register("category_id")} className="w-full px-3 py-2.5 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow">
+            <select {...register("category_id")} className="input-field">
               <option value="">Seleccionar categoría</option>
               {filteredCategories.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
@@ -139,17 +139,17 @@ export default function TransactionForm({ transaction, onSuccess, onClose }: Pro
 
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1.5">Descripción</label>
-            <input type="text" placeholder="Descripción de la transacción" {...register("descripcion")} className="w-full px-3 py-2.5 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow" />
+            <input type="text" placeholder="Descripción de la transacción" {...register("descripcion")} className="input-field" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1.5">Notas <span className="text-neutral-400 font-normal">(opcional)</span></label>
-            <textarea rows={2} placeholder="Notas adicionales" {...register("notes")} className="w-full px-3 py-2.5 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow resize-none" />
+            <textarea rows={2} placeholder="Notas adicionales" {...register("notes")} className="input-field resize-none" />
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-600 hover:bg-neutral-50 transition-colors">Cancelar</button>
-            <button type="submit" disabled={isSubmitting} className="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-sm">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1">Cancelar</button>
+            <button type="submit" disabled={isSubmitting} className="btn-primary flex-1">
               {isSubmitting ? "Guardando..." : transaction ? "Actualizar" : "Guardar"}
             </button>
           </div>

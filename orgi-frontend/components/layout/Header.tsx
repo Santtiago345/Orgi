@@ -2,7 +2,7 @@
 import { useUIStore } from "@/store/ui.store";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
-import { Menu, Search, LogOut } from "lucide-react";
+import { Menu, LogOut, Bell } from "lucide-react";
 
 export default function Header() {
   const { toggleSidebar } = useUIStore();
@@ -15,29 +15,33 @@ export default function Header() {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-neutral-100 flex items-center justify-between px-4 lg:px-8 shrink-0">
+    <header className="h-16 bg-white/80 backdrop-blur-md border-b border-neutral-100 flex items-center justify-between px-4 lg:px-8 shrink-0 sticky top-0 z-30">
       <div className="flex items-center gap-4">
         <button
           onClick={toggleSidebar}
-          className="p-2 -ml-2 rounded-xl hover:bg-neutral-100 transition-colors lg:hidden"
+          className="p-2 -ml-2 rounded-xl hover:bg-neutral-100 active:scale-95 transition-all lg:hidden"
         >
           <Menu size={20} className="text-neutral-600" />
         </button>
-        <div className="relative hidden sm:block">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
-          <input
-            type="text"
-            placeholder="Buscar transacciones..."
-            className="w-64 lg:w-80 pl-9 pr-3 py-2 bg-neutral-50 border border-transparent rounded-xl text-sm
-                       placeholder:text-neutral-400
-                       focus:outline-none focus:bg-white focus:border-primary/30 focus:ring-2 focus:ring-primary/10
-                       transition-all duration-200"
-          />
+        <div className="hidden sm:block">
+          <p className="text-xs text-neutral-400">
+            {new Date().toLocaleDateString("es-CO", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-3 pr-3 border-r border-neutral-100">
+      <div className="flex items-center gap-2">
+        <button className="relative p-2 rounded-xl hover:bg-neutral-100 active:scale-95 transition-all group">
+          <Bell size={18} className="text-neutral-400 group-hover:text-neutral-600 transition-colors" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-danger rounded-full ring-2 ring-white" />
+        </button>
+
+        <div className="flex items-center gap-3 pl-2 border-l border-neutral-100">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center ring-2 ring-primary/5">
             <span className="text-sm font-bold text-primary">
               {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
@@ -48,9 +52,10 @@ export default function Header() {
             <p className="text-xs text-neutral-400">{user?.email}</p>
           </div>
         </div>
+
         <button
           onClick={handleLogout}
-          className="p-2 rounded-xl hover:bg-neutral-100 transition-colors group"
+          className="p-2 rounded-xl hover:bg-neutral-100 active:scale-95 transition-all group"
           title="Cerrar sesión"
         >
           <LogOut size={16} className="text-neutral-400 group-hover:text-danger transition-colors" />

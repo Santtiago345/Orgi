@@ -5,8 +5,9 @@ import { useAuthStore } from "@/store/auth.store";
 import { useUIStore } from "@/store/ui.store";
 import {
   LayoutDashboard, ArrowLeftRight, Wallet, CreditCard, PercentCircle,
-  PiggyBank, FileText, BarChart3, LogOut, X,
+  PiggyBank, FileText, BarChart3, LogOut, X, ChevronLeft,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -22,7 +23,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
-  const { sidebarOpen, setSidebarOpen } = useUIStore();
+  const { sidebarOpen, setSidebarOpen, sidebarPinned, setSidebarPinned } = useUIStore();
 
   const handleNav = () => {
     if (window.innerWidth < 1024) setSidebarOpen(false);
@@ -36,15 +37,23 @@ export default function Sidebar() {
   return (
     <>
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
 
-      <aside className={`fixed left-0 top-0 h-full w-64 bg-sidebar flex flex-col z-50 transition-all duration-300 ${
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      } lg:translate-x-0`}>
+      <aside
+        className={cn(
+          "fixed left-0 top-0 h-full bg-sidebar flex flex-col z-50",
+          "transition-all duration-300 ease-in-out",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
+          sidebarPinned ? "lg:translate-x-0 lg:w-64" : "lg:-translate-x-full",
+        )}
+      >
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/5 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center shadow-sm shadow-primary/30">
               <span className="text-white text-xs font-bold">O</span>
             </div>
             <div>
@@ -52,14 +61,28 @@ export default function Sidebar() {
               <p className="text-[10px] text-sidebar-text/60 leading-tight">Finanzas Personales</p>
             </div>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="p-1.5 rounded-lg hover:bg-sidebar-hover text-sidebar-text lg:hidden">
-            <X size={16} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setSidebarPinned(!sidebarPinned)}
+              className="hidden lg:flex p-1.5 rounded-lg hover:bg-sidebar-hover text-sidebar-text/40 hover:text-sidebar-text transition-all"
+              title={sidebarPinned ? "Fijar sidebar" : "Auto-ocultar"}
+            >
+              <ChevronLeft size={14} className={cn("transition-transform", !sidebarPinned && "rotate-180")} />
+            </button>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-1.5 rounded-lg hover:bg-sidebar-hover text-sidebar-text lg:hidden transition-all"
+            >
+              <X size={16} />
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto scrollbar-thin">
-          <p className="px-3 text-[10px] font-semibold text-sidebar-text/40 uppercase tracking-widest mb-2">Menú principal</p>
-          {navItems.map((item) => {
+          <p className="px-3 text-[10px] font-semibold text-sidebar-text/40 uppercase tracking-widest mb-2">
+            Menú principal
+          </p>
+          {navItems.map((item, idx) => {
             const Icon = item.icon;
             const active = isActive(item.href);
             return (
@@ -67,14 +90,24 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={handleNav}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group ${
+                className={cn(
+                  "relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group",
                   active
                     ? "bg-sidebar-active/15 text-white font-medium"
-                    : "text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-heading"
-                }`}
+                    : "text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-heading",
+                )}
+                style={{ animationDelay: `${idx * 50}ms` }}
               >
-                {active && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full" />}
-                <Icon size={18} className={active ? "text-primary" : "text-sidebar-text group-hover:text-sidebar-heading transition-colors"} />
+                {active && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full" />
+                )}
+                <Icon
+                  size={18}
+                  className={cn(
+                    "transition-colors",
+                    active ? "text-primary" : "text-sidebar-text group-hover:text-sidebar-heading",
+                  )}
+                />
                 {item.label}
               </Link>
             );
@@ -89,15 +122,17 @@ export default function Sidebar() {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-sidebar-heading truncate">{user?.full_name || "Usuario"}</p>
+              <p className="text-xs font-medium text-sidebar-heading truncate">
+                {user?.full_name || "Usuario"}
+              </p>
               <p className="text-[10px] text-sidebar-text/60 truncate">{user?.email}</p>
             </div>
           </div>
           <button
             onClick={() => { logout(); if (window.innerWidth < 1024) setSidebarOpen(false); }}
-            className="flex items-center gap-3 px-3 py-2 w-full rounded-xl text-xs text-sidebar-text/60 hover:text-danger hover:bg-danger/5 transition-all"
+            className="flex items-center gap-3 px-3 py-2 w-full rounded-xl text-xs text-sidebar-text/60 hover:text-danger hover:bg-danger/5 transition-all group"
           >
-            <LogOut size={14} />
+            <LogOut size={14} className="group-hover:scale-110 transition-transform" />
             Cerrar sesión
           </button>
         </div>
