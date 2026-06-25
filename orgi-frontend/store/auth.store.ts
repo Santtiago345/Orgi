@@ -23,11 +23,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
   login: (token, refreshToken, user) => {
     localStorage.setItem("access_token", token);
     localStorage.setItem("refresh_token", refreshToken);
+    document.cookie = `access_token=${token}; path=/; max-age=604800; SameSite=Lax`;
     set({ user, accessToken: token, isAuthenticated: true });
   },
   logout: () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    document.cookie = "access_token=; path=/; max-age=0";
     set({ user: null, accessToken: null, isAuthenticated: false });
   },
   setUser: (user) => set({ user }),
