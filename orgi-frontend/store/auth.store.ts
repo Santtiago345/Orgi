@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import { User } from "@/types";
 
+function getStoredToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("access_token");
+}
+
 interface AuthStore {
   user: User | null;
   accessToken: string | null;
@@ -8,12 +13,13 @@ interface AuthStore {
   login: (token: string, refreshToken: string, user: User) => void;
   logout: () => void;
   setUser: (user: User) => void;
+  hydrate: () => void;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   accessToken: null,
-  isAuthenticated: false,
+  isAuthenticated: !!getStoredToken(),
   login: (token, refreshToken, user) => {
     localStorage.setItem("access_token", token);
     localStorage.setItem("refresh_token", refreshToken);
@@ -25,4 +31,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ user: null, accessToken: null, isAuthenticated: false });
   },
   setUser: (user) => set({ user }),
+  hydrate: () => {
+    const token = getStoredToken();
+    set({ accessToken: token, isAuthenticated: !!token });
+  },
 }));
