@@ -1,17 +1,17 @@
 import pytest
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
 from app.core.database import Base, get_db
 from app.core.security import create_access_token, get_password_hash
-from app.models.user import User
-from app.models.account import Account
-from app.models.category import Category
+from app.models import User, Account, Category, Transaction, CreditCard, CreditCardTransaction, Debt, DebtPayment, PDFImport, Budget
 from app.main import app
 
 @pytest.fixture
-def db_session():
-    engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+def db_session(tmp_path):
+    db_path = tmp_path / "test.db"
+    engine = create_engine(f"sqlite:///{db_path}", connect_args={"check_same_thread": False})
     Base.metadata.create_all(bind=engine)
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     session = TestingSessionLocal()

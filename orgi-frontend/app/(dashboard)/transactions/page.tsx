@@ -1,27 +1,53 @@
 "use client";
 import { useState } from "react";
-import { useTransactions } from "@/lib/hooks/useTransactions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteTransaction } from "@/lib/api/transactions";
+import TransactionTable from "@/components/transactions/TransactionTable";
+import TransactionForm from "@/components/transactions/TransactionForm";
+import { Transaction } from "@/types";
 import { Plus, Upload } from "lucide-react";
 import Link from "next/link";
 
 export default function TransactionsPage() {
-  const [page, setPage] = useState(1);
-  const { query, remove } = useTransactions({ page, per_page: 15 });
-  const transactions = query.data?.data || [];
-  const totalPages = query.data?.total_pages || 1;
+  const [showForm, setShowForm] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | undefined>();
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const queryClient = useQueryClient();
 
-  const formatCOP = (amount: string) => {
-    try {
-      const num = parseFloat(amount);
-      return new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(num);
-    } catch { return amount; }
+  const remove = useMutation({
+    mutationFn: deleteTransaction,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+  });
+
+  const handleEdit = (tx: Transaction) => {
+    setEditingTransaction(tx);
+    setShowForm(true);
+  };
+
+  const handleDelete = (tx: Transaction) => {
+    setDeletingId(tx.id);
+  };
+
+  const confirmDelete = async () => {
+    if (deletingId !== null) {
+      await remove.mutateAsync(deletingId);
+      setDeletingId(null);
+    }
+  };
+
+  const handleFormSuccess = () => {
+    setShowForm(false);
+    setEditingTransaction(undefined);
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
+          <button
+            onClick={() => { setEditingTransaction(undefined); setShowForm(true); }}
+            className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90"
+          >
             <Plus size={16} /> Nueva Transacción
           </button>
           <Link href="/pdf" className="flex items-center gap-2 border border-neutral-200 text-neutral-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-50">
@@ -30,59 +56,30 @@ export default function TransactionsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-neutral-200 bg-neutral-50">
-                <th className="text-left px-4 py-3 text-sm font-medium text-neutral-600">Fecha</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-neutral-600">Descripción</th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-neutral-600">Categoría</th>
-                <th className="text-right px-4 py-3 text-sm font-medium text-neutral-600">Monto</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((tx) => (
-                <tr key={tx.id} className="border-b border-neutral-50 hover:bg-neutral-50">
-                  <td className="px-4 py-3 text-sm">{new Date(tx.fecha).toLocaleDateString("es-CO")}</td>
-                  <td className="px-4 py-3 text-sm">{tx.descripcion || "—"}</td>
-                  <td className="px-4 py-3">
-                    <span className="text-xs px-2 py-1 rounded-full bg-neutral-100">{tx.category?.name || "Sin categoría"}</span>
-                  </td>
-                  <td className={`px-4 py-3 text-sm font-mono text-right ${tx.tipo === "ingreso" ? "text-success" : "text-danger"}`}>
-                    {tx.tipo === "ingreso" ? "+" : "-"}{formatCOP(tx.cantidad)}
-                  </td>
-                </tr>
-              ))}
-              {transactions.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-neutral-600">No hay transacciones</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+      <TransactionTable onEdit={handleEdit} onDelete={handleDelete} />
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 p-4 border-t border-neutral-200">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="px-3 py-1 text-sm border rounded-lg disabled:opacity-50"
-            >
-              ← Anterior
-            </button>
-            <span className="text-sm text-neutral-600">Página {page} de {totalPages}</span>
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="px-3 py-1 text-sm border rounded-lg disabled:opacity-50"
-            >
-              Siguiente →
-            </button>
+      {showForm && (
+        <TransactionForm
+          transaction={editingTransaction}
+          onSuccess={handleFormSuccess}
+          onClose={() => { setShowForm(false); setEditingTransaction(undefined); }}
+        />
+      )}
+
+      {deletingId !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeletingId(null)}>
+          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-semibold text-lg mb-2">Eliminar transacción</h3>
+            <p className="text-sm text-neutral-600 mb-6">Esta acción restaurará el balance de la cuenta. ¿Estás seguro?</p>
+            <div className="flex gap-3">
+              <button onClick={() => setDeletingId(null)} className="flex-1 py-2 border border-neutral-200 rounded-lg text-sm font-medium text-neutral-600 hover:bg-neutral-50">Cancelar</button>
+              <button onClick={confirmDelete} disabled={remove.isPending} className="flex-1 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-danger/90 disabled:opacity-50">
+                {remove.isPending ? "Eliminando..." : "Eliminar"}
+              </button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

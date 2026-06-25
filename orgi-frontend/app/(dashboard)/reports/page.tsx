@@ -20,7 +20,7 @@ export default function ReportsPage() {
 
   const parseToNum = (val?: string) => val ? parseFloat(val) : 0;
 
-  const monthlyChartData = annual ? annual.ingresos_por_mes.map((d, i) => ({
+  const monthlyChartData = annual ? annual.ingresos_por_mes.map((d: { mes: number; monto: string }, i: number) => ({
     mes: d.mes || i + 1,
     ingresos: parseToNum(d.monto),
     gastos: parseToNum(annual.gastos_por_mes[i]?.monto) || 0,

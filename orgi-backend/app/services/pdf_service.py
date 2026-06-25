@@ -1,7 +1,8 @@
 import os
 import tempfile
+import os
+import tempfile
 from typing import List, Optional
-from dataclasses import dataclass
 from decimal import Decimal
 from datetime import datetime
 import re
@@ -17,6 +18,7 @@ from app.models.account import Account
 from app.models.category import Category
 from app.utils.pdf_cleaner import is_duplicate, suggest_category
 from app.services.parsers import BancolombiaParser, DaviviendaParser, BbvaParser, GenericParser
+from app.services.parsers.types import TransactionRaw, PDFImportResult
 
 BANK_PATTERNS = [
     (re.compile(r'bancolombia', re.I), "BANCOLOMBIA"),
@@ -35,25 +37,6 @@ PARSER_MAP = {
     "NEQUI": GenericParser,
     "SCOTIABANK": GenericParser,
 }
-
-@dataclass
-class TransactionRaw:
-    fecha: datetime
-    descripcion: str
-    cantidad: Decimal
-    tipo: str
-    referencia: Optional[str]
-    categoria_sugerida: Optional[str]
-    confianza: float
-
-@dataclass
-class PDFImportResult:
-    import_id: int
-    status: str
-    transactions_found: int
-    transactions_imported: int
-    transactions_skipped: int
-    errors: List[str]
 
 class PDFProcessor:
     def __init__(self, filepath: str, user_id: int, db: Session, account_id: Optional[int] = None):

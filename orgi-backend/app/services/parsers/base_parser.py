@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 import pandas as pd
-from app.services.pdf_service import TransactionRaw
+from app.services.parsers.types import TransactionRaw
 
 class BaseParser(ABC):
     @abstractmethod

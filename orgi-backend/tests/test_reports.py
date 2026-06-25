@@ -1,4 +1,4 @@
-def test_monthly_summary(client, auth_headers, auth_headers, test_account, test_category):
+def test_monthly_summary(client, auth_headers, test_account, test_category):
     # Create income
     client.post("/api/v1/transactions", json={
         "fecha": "2026-06-01T00:00:00Z", "tipo": "ingreso",

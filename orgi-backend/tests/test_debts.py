@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 def test_create_debt(client, auth_headers, test_user):
     response = client.post("/api/v1/debts", json={
         "name": "Préstamo prueba",
@@ -48,3 +50,23 @@ def test_debt_summary(client, auth_headers, test_user):
     data = response.json()
     assert data["total_debt"] == "5000000.00"
     assert data["active_count"] == 2
+
+def test_debt_interest_calculation(client, auth_headers, db_session, test_user):
+    debt_resp = client.post("/api/v1/debts", json={
+        "name": "Deuda interés",
+        "type": "prestamo",
+        "original_amount": "10000000.00",
+        "current_balance": "10000000.00",
+        "interest_rate": "1.5",
+    }, headers=auth_headers)
+    debt_id = debt_resp.json()["id"]
+
+    client.post(f"/api/v1/debts/{debt_id}/payments", json={
+        "payment_date": "2026-07-15",
+        "amount": "500000.00",
+    }, headers=auth_headers)
+
+    from app.models.debt_payment import DebtPayment
+    payment = db_session.query(DebtPayment).filter(DebtPayment.debt_id == debt_id).first()
+    assert payment.interest_portion == Decimal("150000.00")
+    assert payment.principal_portion == Decimal("350000.00")

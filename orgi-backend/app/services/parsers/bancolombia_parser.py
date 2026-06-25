@@ -3,7 +3,7 @@ from typing import List
 from datetime import datetime
 from decimal import Decimal
 import pandas as pd
-from app.services.pdf_service import TransactionRaw
+from app.services.parsers.types import TransactionRaw
 from app.services.parsers.base_parser import BaseParser
 from app.utils.pdf_cleaner import clean_amount_cop, clean_date, suggest_category
 

@@ -32,6 +32,10 @@ def clean_amount_cop(text: str) -> Decimal:
             cleaned = cleaned.replace(',', '')
     elif ',' in cleaned:
         cleaned = cleaned.replace(',', '.')
+    elif '.' in cleaned and cleaned.count('.') > 1:
+        cleaned = cleaned.replace('.', '')
+    elif '.' in cleaned and len(cleaned.split('.')[-1]) == 3 and len(cleaned) > 4:
+        cleaned = cleaned.replace('.', '')
     try:
         return Decimal(cleaned)
     except InvalidOperation:

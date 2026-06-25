@@ -36,7 +36,6 @@ def create_transaction(db: Session, user_id: int, data: TransactionCreate) -> Tr
     )
     db.add(transaction)
     db.commit()
-    db.refresh(transaction)
     return transaction
 
 def get_transactions(db: Session, user_id: int, filters: dict, pagination: dict):

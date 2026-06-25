@@ -1,6 +1,6 @@
 "use client";
 import { LucideIcon } from "lucide-react";
-import { TrendUp, TrendDown } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface KPICardProps {
   title: string;
@@ -41,7 +41,7 @@ export default function KPICard({ title, value, change, changeType, icon: Icon, 
       <p className="text-2xl font-bold font-mono mb-1">{formatCOP(value)}</p>
       {change !== undefined && (
         <div className={`flex items-center gap-1 text-sm ${changeType === "up" ? "text-success" : "text-danger"}`}>
-          {changeType === "up" ? <TrendUp size={14} /> : <TrendDown size={14} />}
+          {changeType === "up" ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
           <span>{Math.abs(change).toFixed(1)}% vs mes anterior</span>
         </div>
       )}

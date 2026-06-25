@@ -29,8 +29,6 @@ class TransactionResponse(TransactionBase):
     category_id: int
     is_reconciled: bool
     created_at: datetime
-    account: Optional[dict] = None
-    category: Optional[dict] = None
 
     model_config = {"from_attributes": True}
 

@@ -1,6 +1,6 @@
 from typing import List
 import pandas as pd
-from app.services.pdf_service import TransactionRaw
+from app.services.parsers.types import TransactionRaw
 from app.services.parsers.davivienda_parser import DaviviendaParser
 
 class BbvaParser(DaviviendaParser):
