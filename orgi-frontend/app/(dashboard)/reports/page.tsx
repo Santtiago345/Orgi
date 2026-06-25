@@ -4,6 +4,7 @@ import { getNetWorth, getMonthlySummary, getAnnualSummary } from "@/lib/api/repo
 import IncomeExpenseChart from "@/components/charts/IncomeExpenseChart";
 import CategoryDonutChart from "@/components/charts/CategoryDonutChart";
 import { formatCOP, parseToNumber } from "@/lib/utils";
+import { BarChart3 } from "lucide-react";
 
 export default function ReportsPage() {
   const now = new Date();
@@ -34,21 +35,21 @@ export default function ReportsPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-xl font-bold text-neutral-800">Reportes</h2>
-        <p className="text-sm text-neutral-500 mt-0.5">Visualiza tus finanzas con gráficas detalladas</p>
+        <h2 className="text-xl font-bold text-neutral-900">Reportes</h2>
+        <p className="text-sm text-neutral-400 mt-0.5">Visualiza tus finanzas con graficas detalladas</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="card-hover border-success/15 p-5 animate-fade-in-up" style={{ animationDelay: "0ms" }}>
-          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Activos</p>
+        <div className="card-hover p-5 animate-fade-in-up" style={{ animationDelay: "0ms" }}>
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Activos</p>
           <p className="text-2xl font-bold font-mono text-success">{formatCOP(netWorth?.activos || "0")}</p>
         </div>
-        <div className="card-hover border-danger/15 p-5 animate-fade-in-up" style={{ animationDelay: "80ms" }}>
-          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Pasivos</p>
+        <div className="card-hover p-5 animate-fade-in-up" style={{ animationDelay: "80ms" }}>
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Pasivos</p>
           <p className="text-2xl font-bold font-mono text-danger">{formatCOP(netWorth?.pasivos || "0")}</p>
         </div>
-        <div className="card-hover border-primary/15 p-5 animate-fade-in-up" style={{ animationDelay: "160ms" }}>
-          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Patrimonio Neto</p>
+        <div className="card-hover p-5 animate-fade-in-up" style={{ animationDelay: "160ms" }}>
+          <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1">Patrimonio Neto</p>
           <p className="text-2xl font-bold font-mono text-primary">{formatCOP(netWorth?.patrimonio_neto || "0")}</p>
         </div>
       </div>
@@ -73,12 +74,12 @@ export default function ReportsPage() {
         </div>
       ) : (
         <div className="card p-12 animate-fade-in">
-          <div className="text-center text-neutral-500">
+          <div className="text-center text-neutral-400">
             <div className="empty-state-icon mx-auto mb-4">
-              <span className="text-2xl">📊</span>
+              <BarChart3 size={24} className="text-neutral-300" />
             </div>
-            <p className="font-semibold text-neutral-700">No hay datos suficientes</p>
-            <p className="text-sm text-neutral-500 mt-1">Crea algunas transacciones para generar reportes.</p>
+            <p className="font-semibold text-neutral-600">No hay datos suficientes</p>
+            <p className="text-sm text-neutral-400 mt-1">Crea algunas transacciones para generar reportes.</p>
           </div>
         </div>
       )}
