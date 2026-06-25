@@ -14,6 +14,7 @@ class Category(Base):
     icon = Column(String(50))
     parent_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
     is_system = Column(Boolean, default=False)
+    referencia = Column(String(100), unique=True, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

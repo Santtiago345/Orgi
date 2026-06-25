@@ -13,6 +13,7 @@ class Account(Base):
     bank_name = Column(String(255))
     balance = Column(Numeric(15, 2), default=0)
     currency = Column(String(3), default="COP")
+    referencia = Column(String(100), unique=True, nullable=True)
     color = Column(String(7), default="#1A56DB")
     icon = Column(String(50))
     is_active = Column(Boolean, default=True)

@@ -93,7 +93,7 @@ def generate_insert_sql(source_path: str, target_user_id: int = 1) -> tuple:
     errors = []
 
     # Map accounts
-    cursor.execute("SELECT uid, title, currencyCode FROM account WHERE isRemoved = 0")
+    cursor.execute('SELECT uid, title, currencyCode FROM "account" WHERE isRemoved = 0')
     accounts = cursor.fetchall()
     for uid, title, currency in accounts:
         if not title:
@@ -105,7 +105,7 @@ def generate_insert_sql(source_path: str, target_user_id: int = 1) -> tuple:
         stats["found"] += 1
 
     # Map categories
-    cursor.execute("SELECT uid, title, type, color, icon FROM category WHERE isRemoved = 0")
+    cursor.execute('SELECT uid, title, type, color, icon FROM "category" WHERE isRemoved = 0')
     categories = cursor.fetchall()
     for uid, title, cat_type, color, icon in categories:
         tipo = "ingreso" if cat_type == "Income" else "gasto"
@@ -119,7 +119,7 @@ def generate_insert_sql(source_path: str, target_user_id: int = 1) -> tuple:
         SELECT t.uid, t.date, t.comment, t.type, t.amountInDefaultCurrency,
                sl1.otherUid as account_uid,
                sl2.otherUid as category_uid
-        FROM transaction t
+        FROM "transaction" t
         LEFT JOIN sync_link sl1 ON sl1.entityUid = t.uid AND sl1.entityType = 'Transaction' AND sl1.otherType = 'Account'
         LEFT JOIN sync_link sl2 ON sl2.entityUid = t.uid AND sl2.entityType = 'Transaction' AND sl2.otherType = 'Category'
         WHERE t.isRemoved = 0
