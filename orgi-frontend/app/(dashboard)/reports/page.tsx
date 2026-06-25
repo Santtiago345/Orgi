@@ -28,27 +28,30 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-semibold">Reportes</h2>
+      <div>
+        <h2 className="text-xl font-bold text-neutral-800">Reportes</h2>
+        <p className="text-sm text-neutral-500 mt-0.5">Visualiza tus finanzas con gráficas detalladas</p>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl shadow-card p-6">
-          <p className="text-sm text-neutral-600">Activos</p>
+        <div className="card-hover border-success/15 p-5">
+          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Activos</p>
           <p className="text-2xl font-bold font-mono text-success">{formatCOP(netWorth?.activos || "0")}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-card p-6">
-          <p className="text-sm text-neutral-600">Pasivos</p>
+        <div className="card-hover border-danger/15 p-5">
+          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Pasivos</p>
           <p className="text-2xl font-bold font-mono text-danger">{formatCOP(netWorth?.pasivos || "0")}</p>
         </div>
-        <div className="bg-white rounded-xl shadow-card p-6">
-          <p className="text-sm text-neutral-600">Patrimonio Neto</p>
+        <div className="card-hover border-primary/15 p-5">
+          <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Patrimonio Neto</p>
           <p className="text-2xl font-bold font-mono text-primary">{formatCOP(netWorth?.patrimonio_neto || "0")}</p>
         </div>
       </div>
 
-      {monthlyChartData.length > 0 && (
+      {monthlyChartData.length > 0 || (summary?.gastos_por_categoria && summary.gastos_por_categoria.length > 0) ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <IncomeExpenseChart data={monthlyChartData} />
-          {summary?.gastos_por_categoria && (
+          {summary?.gastos_por_categoria && summary.gastos_por_categoria.length > 0 && (
             <CategoryDonutChart
               data={summary.gastos_por_categoria.map((c) => ({
                 categoria: c.categoria,
@@ -58,6 +61,12 @@ export default function ReportsPage() {
               }))}
             />
           )}
+        </div>
+      ) : (
+        <div className="card p-12">
+          <div className="text-center text-neutral-500">
+            No hay datos suficientes para generar reportes. Crea algunas transacciones primero.
+          </div>
         </div>
       )}
     </div>

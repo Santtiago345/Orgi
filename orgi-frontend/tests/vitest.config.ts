@@ -7,7 +7,7 @@ export default defineConfig({
     jsxImportSource: "react",
   },
   test: {
-    environment: "happy-dom",
+    environment: "jsdom",
     setupFiles: [],
   },
   resolve: {

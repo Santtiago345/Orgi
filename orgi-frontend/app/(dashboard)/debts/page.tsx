@@ -16,64 +16,79 @@ export default function DebtsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Deudas</h2>
-        <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold text-neutral-800">Deudas</h2>
+          <p className="text-sm text-neutral-500 mt-0.5">Gestiona tus obligaciones financieras</p>
+        </div>
+        <button className="btn-primary">
           <Plus size={16} /> Nueva Deuda
         </button>
       </div>
 
       {summary && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-xl shadow-card p-6">
-            <p className="text-sm text-neutral-600">Total Deuda</p>
+          <div className="card-hover border-danger/15 p-5">
+            <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Total Deuda</p>
             <p className="text-2xl font-bold font-mono text-danger">{formatCOP(summary.total_debt)}</p>
           </div>
-          <div className="bg-white rounded-xl shadow-card p-6">
-            <p className="text-sm text-neutral-600">Deudas Activas</p>
-            <p className="text-2xl font-bold">{summary.active_count}</p>
+          <div className="card-hover p-5">
+            <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">Deudas Activas</p>
+            <p className="text-2xl font-bold text-neutral-800">{summary.active_count}</p>
           </div>
-          <div className="bg-white rounded-xl shadow-card p-6">
-            <p className="text-sm text-neutral-600">En Mora</p>
+          <div className="card-hover p-5">
+            <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-1">En Mora</p>
             <p className="text-2xl font-bold text-danger">{summary.overdue_count}</p>
           </div>
         </div>
       )}
 
-      <div className="space-y-3">
-        {debts?.map((debt) => (
-          <div key={debt.id} className="bg-white rounded-xl shadow-card p-6">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <PercentCircle size={20} className="text-danger" />
-                <div>
-                  <h3 className="font-medium">{debt.name}</h3>
-                  <p className="text-xs text-neutral-600">{debt.creditor_name || debt.type}</p>
+      {debts && debts.length > 0 ? (
+        <div className="space-y-3">
+          {debts.map((debt) => (
+            <div key={debt.id} className="card-hover p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-danger-light flex items-center justify-center">
+                    <PercentCircle size={20} className="text-danger" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-neutral-800">{debt.name}</h3>
+                    <p className="text-xs text-neutral-500">{debt.creditor_name || debt.type}</p>
+                  </div>
+                </div>
+                <span className={`text-xs px-2.5 py-1 rounded-lg font-medium border ${
+                  debt.status === "activa" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                  debt.status === "pagada" ? "bg-success-light text-success border-success/20" :
+                  "bg-danger-light text-danger border-danger/20"
+                }`}>
+                  {debt.status.charAt(0).toUpperCase() + debt.status.slice(1)}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div className="p-3 bg-neutral-50 rounded-xl">
+                  <span className="text-neutral-500 text-xs">Saldo pendiente</span>
+                  <p className="font-mono font-semibold text-neutral-800 mt-0.5">{formatCOP(debt.current_balance)}</p>
+                </div>
+                <div className="p-3 bg-neutral-50 rounded-xl">
+                  <span className="text-neutral-500 text-xs">Pago mensual</span>
+                  <p className="font-mono font-semibold text-neutral-800 mt-0.5">{debt.monthly_payment ? formatCOP(debt.monthly_payment) : "—"}</p>
                 </div>
               </div>
-              <span className={`text-xs px-2 py-1 rounded-full ${
-                debt.status === "activa" ? "bg-warning/10 text-warning" :
-                debt.status === "pagada" ? "bg-success/10 text-success" : "bg-danger/10 text-danger"
-              }`}>
-                {debt.status}
-              </span>
             </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-neutral-600">Saldo pendiente:</span>
-                <span className="font-mono font-medium ml-2">{formatCOP(debt.current_balance)}</span>
-              </div>
-              <div>
-                <span className="text-neutral-600">Pago mensual:</span>
-                <span className="font-mono ml-2">{debt.monthly_payment ? formatCOP(debt.monthly_payment) : "—"}</span>
-              </div>
+          ))}
+        </div>
+      ) : (
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <PercentCircle size={24} className="text-neutral-400" />
             </div>
+            <p className="font-semibold text-neutral-700">No hay deudas registradas</p>
+            <p className="text-sm text-neutral-500 mt-1">Lleva el control de tus obligaciones financieras.</p>
           </div>
-        ))}
-        {(!debts || debts.length === 0) && (
-          <div className="text-center py-12 text-neutral-600">No hay deudas registradas.</div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,29 +1,33 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth.store";
-import { useUIStore } from "@/store/ui.store";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuthStore();
-  const { sidebarOpen } = useUIStore();
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setMounted(true);
     const token = localStorage.getItem("access_token");
     if (!token) router.push("/login");
   }, [router]);
 
-  if (!isAuthenticated) return null;
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="min-h-screen bg-surface">
       <Sidebar />
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0 md:ml-64"}`}>
+      <div className="lg:ml-64 flex flex-col min-h-screen">
         <Header />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full">
           {children}
         </main>
       </div>

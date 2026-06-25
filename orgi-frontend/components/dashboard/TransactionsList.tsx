@@ -22,36 +22,37 @@ export default function TransactionsList({ transactions, limit = 5, showViewAll 
   const items = transactions.slice(0, limit);
 
   return (
-    <div className="bg-white rounded-xl shadow-card p-6">
-      <h3 className="font-semibold mb-4">Últimas Transacciones</h3>
-      <div className="space-y-3">
-        {items.map((tx) => (
-          <div key={tx.id} className="flex items-center justify-between py-2 border-b border-neutral-50 last:border-0">
-            <div className="flex items-center gap-3">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                tx.tipo === "ingreso" ? "bg-success/10 text-success" : "bg-danger/10 text-danger"
+    <div className="card p-6">
+      <h3 className="font-semibold text-neutral-800 mb-4">Últimas Transacciones</h3>
+      {items.length > 0 ? (
+        <div className="space-y-1">
+          {items.map((tx) => (
+            <div key={tx.id} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-neutral-50 transition-colors -mx-3">
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold ${
+                  tx.tipo === "ingreso" ? "bg-success-light text-success" : "bg-danger-light text-danger"
+                }`}>
+                  {tx.tipo === "ingreso" ? "+" : "-"}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-neutral-800">{tx.descripcion || "Sin descripción"}</p>
+                  <p className="text-xs text-neutral-500">{tx.category?.name || "Sin categoría"}</p>
+                </div>
+              </div>
+              <span className={`font-mono text-sm font-bold ${
+                tx.tipo === "ingreso" ? "text-success" : "text-danger"
               }`}>
-                {tx.tipo === "ingreso" ? "+" : "-"}
-              </div>
-              <div>
-                <p className="text-sm font-medium">{tx.descripcion || "Sin descripción"}</p>
-                <p className="text-xs text-neutral-600">{tx.category?.name || "Sin categoría"}</p>
-              </div>
+                {tx.tipo === "ingreso" ? "+" : "-"}{formatCOP(tx.cantidad)}
+              </span>
             </div>
-            <span className={`font-mono text-sm font-medium ${
-              tx.tipo === "ingreso" ? "text-success" : "text-danger"
-            }`}>
-              {tx.tipo === "ingreso" ? "+" : "-"}{formatCOP(tx.cantidad)}
-            </span>
-          </div>
-        ))}
-        {items.length === 0 && (
-          <p className="text-sm text-neutral-600 text-center py-4">No hay transacciones recientes</p>
-        )}
-      </div>
-      {showViewAll && (
-        <Link href="/transactions" className="flex items-center justify-center gap-1 mt-4 text-sm text-primary hover:underline">
-          Ver todas <ArrowRight size={14} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-neutral-500 text-center py-8">No hay transacciones recientes</p>
+      )}
+      {showViewAll && items.length > 0 && (
+        <Link href="/transactions" className="flex items-center justify-center gap-1.5 mt-4 pt-3 border-t border-neutral-100 text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+          Ver todas las transacciones <ArrowRight size={14} />
         </Link>
       )}
     </div>

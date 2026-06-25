@@ -107,6 +107,17 @@ export interface NetWorth {
   patrimonio_neto: string;
 }
 
+export interface MonthlyDataPoint {
+  mes: number;
+  monto: number;
+}
+
+export interface AnnualSummary {
+  ingresos_por_mes: MonthlyDataPoint[];
+  gastos_por_mes: MonthlyDataPoint[];
+  top_categorias: { categoria: string; total: number }[];
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;
